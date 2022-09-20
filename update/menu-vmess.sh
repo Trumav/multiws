@@ -68,64 +68,66 @@ else
 red "Permission Denied!"
 exit 0
 fi
-function cekvless(){
-clear
-echo -n > /tmp/other.txt
-data=( `cat /etc/xray/config.json | grep '#&' | cut -d ' ' -f 2 | sort | uniq`);
+
+function delvmess(){
+    clear
+NUMBER_OF_CLIENTS=$(grep -c -E "^### " "/etc/xray/config.json")
+if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}             • DELETE XRAY USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-
-for akun in "${data[@]}"
-do
-if [[ -z "$akun" ]]; then
-akun="tidakada"
-fi
-
-echo -n > /tmp/ipvless.txt
-data2=( `cat /var/log/xray/access.log | tail -n 500 | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq`);
-for ip in "${data2[@]}"
-do
-
-jum=$(cat /var/log/xray/access.log | grep -w "$akun" | tail -n 500 | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | grep -w "$ip" | sort | uniq)
-if [[ "$jum" = "$ip" ]]; then
-echo "$jum" >> /tmp/ipvless.txt
-else
-echo "$ip" >> /tmp/other.txt
-fi
-jum2=$(cat /tmp/ipvless.txt)
-sed -i "/$jum2/d" /tmp/other.txt > /dev/null 2>&1
-done
-
-jum=$(cat /tmp/ipvless.txt)
-if [[ -z "$jum" ]]; then
-echo > /dev/null
-else
-jum2=$(cat /tmp/ipvless.txt | nl)
-echo -e "$COLOR1│${NC}   user : $akun";
-echo -e "$COLOR1│${NC}   $jum2";
-fi
-rm -rf /tmp/ipvless.txt
-done
-
-rm -rf /tmp/other.txt
+echo -e "$COLOR1│${NC}  • You Dont have any existing clients!"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
 echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
-}
-
-function renewvless(){
+menu-vmess
+fi
 clear
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}             • DELETE XRAY USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-NUMBER_OF_CLIENTS=$(grep -c -E "^#& " "/etc/xray/config.json")
+grep -E "^### " "/etc/xray/config.json" | cut -d ' ' -f 2-3 | column -t | sort | uniq | nl
+echo -e "$COLOR1│${NC}"
+echo -e "$COLOR1│${NC}  • [NOTE] Press any key to back on menu"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
+echo -e "$COLOR1───────────────────────────────────────────────────${NC}"
+read -rp "   Input Username : " user
+if [ -z $user ]; then
+menu-vmess
+else
+exp=$(grep -wE "^### $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+sed -i "/^### $user $exp/,/^},{/d" /etc/xray/config.json
+systemctl restart xray > /dev/null 2>&1
+clear
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
+echo -e "$COLOR1│${NC} ${COLBG1}             • DELETE XRAY USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
+echo -e "$COLOR1│${NC}   • Accound Delete Successfully"
+echo -e "$COLOR1│${NC}"
+echo -e "$COLOR1│${NC}   • Client Name : $user"
+echo -e "$COLOR1│${NC}   • Expired On  : $exp"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
+echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
+echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
+echo ""
+read -n 1 -s -r -p "   Press any key to back on menu"
+menu-vmess
+fi
+}
+function renewvmess(){
+clear
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
+echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VMESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
+NUMBER_OF_CLIENTS=$(grep -c -E "^### " "/etc/xray/config.json")
 if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
 echo -e "$COLOR1│${NC}  • You have no existing clients!"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
@@ -134,14 +136,14 @@ echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
+menu-vmess
 fi
 clear
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VMESS USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-grep -E "^#& " "/etc/xray/config.json" | cut -d ' ' -f 2-3 | column -t | sort | uniq | nl
+grep -E "^### " "/etc/xray/config.json" | cut -d ' ' -f 2-3 | column -t | sort | uniq | nl
 echo -e "$COLOR1│${NC}"
 echo -e "$COLOR1│${NC}  • [NOTE] Press any key to back on menu"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
@@ -151,24 +153,24 @@ echo -e "$COLOR1└────────────────────�
 echo -e "$COLOR1───────────────────────────────────────────────────${NC}"
 read -rp "   Input Username : " user
 if [ -z $user ]; then
-menu-vless
+menu-vmess
 else
 read -p "   Expired (days): " masaaktif
 if [ -z $masaaktif ]; then
 masaaktif="1"
 fi
-exp=$(grep -E "^#& $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+exp=$(grep -E "^### $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
 now=$(date +%Y-%m-%d)
 d1=$(date -d "$exp" +%s)
 d2=$(date -d "$now" +%s)
 exp2=$(( (d1 - d2) / 86400 ))
 exp3=$(($exp2 + $masaaktif))
 exp4=`date -d "$exp3 days" +"%Y-%m-%d"`
-sed -i "/#& $user/c\#& $user $exp4" /etc/xray/config.json
+sed -i "/### $user/c\### $user $exp4" /etc/xray/config.json
 systemctl restart xray > /dev/null 2>&1
 clear
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}             • RENEW VMESS USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
 echo -e "$COLOR1│${NC}   [INFO]  $user Account Renewed Successfully"
@@ -182,74 +184,76 @@ echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
+menu-vmess
 fi
 }
 
-function delvless(){
-    clear
-NUMBER_OF_CLIENTS=$(grep -c -E "^#& " "/etc/xray/config.json")
-if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
-echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}            • DELETE VLESS USER •              ${NC} $COLOR1│$NC"
-echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
-echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC}  • You Dont have any existing clients!"
-echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
-echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
-echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
-echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
-echo ""
-read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
-fi
+function cekvmess(){
 clear
+echo -n > /tmp/other.txt
+data=( `cat /etc/xray/config.json | grep '^###' | cut -d ' ' -f 2 | sort | uniq`);
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}            • DELETE VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}            • VMESS USER ONLINE •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-grep -E "^#& " "/etc/xray/config.json" | cut -d ' ' -f 2-3 | column -t | sort | uniq | nl
-echo -e "$COLOR1│${NC}"
-echo -e "$COLOR1│${NC}  • [NOTE] Press any key to back on menu"
-echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
-echo -e "$COLOR1───────────────────────────────────────────────────${NC}"
-read -rp "   Input Username : " user
-if [ -z $user ]; then
-menu-vless
+
+for akun in "${data[@]}"
+do
+if [[ -z "$akun" ]]; then
+akun="tidakada"
+fi
+
+echo -n > /tmp/ipvmess.txt
+data2=( `cat /var/log/xray/access.log | tail -n 500 | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq`);
+for ip in "${data2[@]}"
+do
+
+jum=$(cat /var/log/xray/access.log | grep -w "$akun" | tail -n 500 | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | grep -w "$ip" | sort | uniq)
+if [[ "$jum" = "$ip" ]]; then
+echo "$jum" >> /tmp/ipvmess.txt
 else
-exp=$(grep -wE "^#& $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
-sed -i "/^#& $user $exp/,/^},{/d" /etc/xray/config.json
-systemctl restart xray > /dev/null 2>&1
-clear
-echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}            • DELETE VLESS USE •              ${NC} $COLOR1│$NC"
-echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
-echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC}   • Accound Delete Successfully"
-echo -e "$COLOR1│${NC}"
-echo -e "$COLOR1│${NC}   • Client Name : $user"
-echo -e "$COLOR1│${NC}   • Expired On  : $exp"
+echo "$ip" >> /tmp/other.txt
+fi
+jum2=$(cat /tmp/ipvmess.txt)
+sed -i "/$jum2/d" /tmp/other.txt > /dev/null 2>&1
+done
+
+jum=$(cat /tmp/ipvmess.txt)
+if [[ -z "$jum" ]]; then
+echo > /dev/null
+else
+jum2=$(cat /tmp/ipvmess.txt | nl)
+echo -e "$COLOR1│${NC} user : $akun";
+echo -e "$COLOR1│${NC} $jum2";
+fi
+rm -rf /tmp/ipvmess.txt
+done
+
+rm -rf /tmp/other.txt
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
 echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
-fi
+menu-vmess
 }
 
-function addvless(){
+function addvmess(){
+clear
+source /var/lib/ssnvpn-pro/ipvps.conf
 domain=$(cat /etc/xray/domain)
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}            • CREATE VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}            • CREATE VMESS USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-tls="$(cat ~/log-install.txt | grep -w "Vless TLS" | cut -d: -f2|sed 's/ //g')"
-none="$(cat ~/log-install.txt | grep -w "Vless None TLS" | cut -d: -f2|sed 's/ //g')"
+tls="$(cat ~/log-install.txt | grep -w "Vmess TLS" | cut -d: -f2|sed 's/ //g')"
+none="$(cat ~/log-install.txt | grep -w "Vmess None TLS" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
-		read -rp "  Input Username : " -e user
-        if [ -z $user ]; then
+
+read -rp "   Input Username : " -e user
+      
+if [ -z $user ]; then
 echo -e "$COLOR1│${NC} [Error] Username cannot be empty "
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
@@ -261,72 +265,129 @@ menu
 fi
 		CLIENT_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
 
-if [[ ${CLIENT_EXISTS} == '1' ]]; then
+		if [[ ${CLIENT_EXISTS} == '1' ]]; then
+clear
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
+echo -e "$COLOR1│${NC} ${COLBG1}            • CREATE VMESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
+echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
 echo -e "$COLOR1│${NC} Please choose another name."
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
 echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
-echo ""
-read -n 1 -s -r -p "   Press any key to back on menu"
+			read -n 1 -s -r -p "   Press any key to back on menu"
 menu
-fi
-done
+		fi
+	done
 
 uuid=$(cat /proc/sys/kernel/random/uuid)
-read -p "  Expired (days): " masaaktif
+read -p "   Expired (days): " masaaktif
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
-sed -i '/#vless$/a\#& '"$user $exp"'\
-},{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
-sed -i '/#vlessgrpc$/a\#& '"$user $exp"'\
-},{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
-vlesslink1="vless://${uuid}@${domain}:$tls?path=/vlessws&security=tls&encryption=none&type=ws#${user}"
-vlesslink2="vless://${uuid}@${domain}:$none?path=/vlessws&encryption=none&type=ws#${user}"
-vlesslink3="vless://${uuid}@${domain}:$tls?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=bug.com#${user}"
-systemctl restart xray
+sed -i '/#vmess$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterId": '"0"',"email": "'""$user""'"' /etc/xray/config.json
+exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
+sed -i '/#vmessgrpc$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterId": '"0"',"email": "'""$user""'"' /etc/xray/config.json
+asu=`cat<<EOF
+      {
+      "v": "2",
+      "ps": "${user}",
+      "add": "${domain}",
+      "port": "443",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "ws",
+      "path": "/vmess",
+      "type": "none",
+      "host": "",
+      "tls": "tls"
+}
+EOF`
+ask=`cat<<EOF
+      {
+      "v": "2",
+      "ps": "${user}",
+      "add": "${domain}",
+      "port": "80",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "ws",
+      "path": "/vmess",
+      "type": "none",
+      "host": "",
+      "tls": "none"
+}
+EOF`
+grpc=`cat<<EOF
+      {
+      "v": "2",
+      "ps": "${user}",
+      "add": "${domain}",
+      "port": "443",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "grpc",
+      "path": "vmess-grpc",
+      "type": "none",
+      "host": "",
+      "tls": "tls"
+}
+EOF`
+vmess_base641=$( base64 -w 0 <<< $vmess_json1)
+vmess_base642=$( base64 -w 0 <<< $vmess_json2)
+vmess_base643=$( base64 -w 0 <<< $vmess_json3)
+vmesslink1="vmess://$(echo $asu | base64 -w 0)"
+vmesslink2="vmess://$(echo $ask | base64 -w 0)"
+vmesslink3="vmess://$(echo $grpc | base64 -w 0)"
+systemctl restart xray > /dev/null 2>&1
+service cron restart > /dev/null 2>&1
 clear
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}            • CREATE VLESS USER •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}            • CREATE VMESS USER •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC} Remarks       : ${user}" 
+echo -e "$COLOR1 ${NC} Remarks       : ${user}"
 echo -e "$COLOR1 ${NC} Expired On    : $exp" 
 echo -e "$COLOR1 ${NC} Domain        : ${domain}" 
-echo -e "$COLOR1 ${NC} port TLS      : $tls" 
-echo -e "$COLOR1 ${NC} port none TLS : $none" 
-echo -e "$COLOR1 ${NC} id            : ${uuid}"
-echo -e "$COLOR1 ${NC} Encryption    : none" 
+echo -e "$COLOR1 ${NC} Port TLS      : ${tls}" 
+echo -e "$COLOR1 ${NC} Port none TLS : ${none}" 
+echo -e "$COLOR1 ${NC} Port  GRPC    : ${tls}" 
+echo -e "$COLOR1 ${NC} id            : ${uuid}" 
+echo -e "$COLOR1 ${NC} alterId       : 0" 
+echo -e "$COLOR1 ${NC} Security      : auto" 
 echo -e "$COLOR1 ${NC} Network       : ws" 
-echo -e "$COLOR1 ${NC} Path          : /vless" 
-echo -e "$COLOR1 ${NC} Path WSS      : wss://bug.com/vless" 
-echo -e "$COLOR1 ${NC} Path          : vless-grpc" 
+echo -e "$COLOR1 ${NC} Path          : /vmess" 
+echo -e "$COLOR1 ${NC} Path WSS      : wss://bug.com/vmess" 
+echo -e "$COLOR1 ${NC} ServiceName   : vmess-grpc" 
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC} Link TLS :"
-echo -e "$COLOR1 ${NC} ${vlesslink1}" 
-echo -e "$COLOR1 ${NC}"   
+echo -e "$COLOR1 ${NC} Link TLS : "
+echo -e "$COLOR1 ${NC} ${vmesslink1}" 
+echo -e "$COLOR1 ${NC} "
 echo -e "$COLOR1 ${NC} Link none TLS : "
-echo -e "$COLOR1 ${NC} ${vlesslink2}" 
-echo -e "$COLOR1 ${NC}"
+echo -e "$COLOR1 ${NC} ${vmesslink2}" 
+echo -e "$COLOR1 ${NC} "
 echo -e "$COLOR1 ${NC} Link GRPC : "
-echo -e "$COLOR1 ${NC} ${vlesslink3}" 
+echo -e "$COLOR1 ${NC} ${vmesslink3}"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
 echo -e "$COLOR1┌────────────────────── BY ───────────────────────┐${NC}"
 echo -e "$COLOR1│${NC}              • WWW.JRTUNNEL.COM •           $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}" 
-echo "" 
+echo ""
+
 read -n 1 -s -r -p "   Press any key to back on menu"
-menu-vless
+menu-vmess
 }
 
 
 clear
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
-echo -e "$COLOR1│${NC} ${COLBG1}             • VLESS PANEL MENU •              ${NC} $COLOR1│$NC"
+echo -e "$COLOR1│${NC} ${COLBG1}             • VMESS PANEL MENU •              ${NC} $COLOR1│$NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 echo -e " $COLOR1┌───────────────────────────────────────────────┐${NC}"
-echo -e " $COLOR1│$NC   ${COLOR1}[01]${NC} • ADD VLESS      ${COLOR1}[03]${NC} • DELETE VLESS${NC}   $COLOR1│$NC"
-echo -e " $COLOR1│$NC   ${COLOR1}[02]${NC} • RENEW VLESS${NC}    ${COLOR1}[04]${NC} • USER ONLINE    $COLOR1│$NC"
+echo -e " $COLOR1│$NC   ${COLOR1}[01]${NC} • ADD VMESS      ${COLOR1}[03]${NC} • DELETE VMESS${NC}   $COLOR1│$NC"
+echo -e " $COLOR1│$NC   ${COLOR1}[02]${NC} • RENEW VMESS${NC}    ${COLOR1}[04]${NC} • USER ONLINE    $COLOR1│$NC"
 echo -e " $COLOR1│$NC                                              ${NC} $COLOR1│$NC"
 echo -e " $COLOR1│$NC   ${COLOR1}[00]${NC} • GO BACK${NC}                              $COLOR1│$NC"
 echo -e " $COLOR1└───────────────────────────────────────────────┘${NC}"
@@ -337,12 +398,12 @@ echo -e ""
 read -p " Select menu :  "  opt
 echo -e ""
 case $opt in
-01 | 1) clear ; addvless ;;
-02 | 2) clear ; renewvless ;;
-03 | 3) clear ; delvless ;;
-04 | 4) clear ; cekvless ;;
+01 | 1) clear ; addvmess ;;
+02 | 2) clear ; renewvmess ;;
+03 | 3) clear ; delvmess ;;
+04 | 4) clear ; cekvmess ;;
 00 | 0) clear ; menu ;;
-*) clear ; menu-vless ;;
+*) clear ; menu-vmess ;;
 esac
 
        
