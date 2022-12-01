@@ -184,20 +184,11 @@ cat <<EOF>> /etc/ssnvpn/theme/color.conf
 blue
 EOF
     
-#install ssh ovpn
-echo -e "$green[INFO]$NC Install SSH"
-sleep 2
-clear
-wget https://raw.githubusercontent.com/khairunisya/multiws/main/ssh/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
 #Instal Xray
 echo -e "$green[INFO]$NC Install Install XRAY!"
 sleep 2
 clear
 wget https://raw.githubusercontent.com/khairunisya/multiws/main/xray/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
-clear
-wget https://raw.githubusercontent.com/khairunisya/multiws/main/websocket/insshws.sh && chmod +x insshws.sh && ./insshws.sh
-clear
-wget https://raw.githubusercontent.com/khairunisya/multiws/main/websocket/nontls.sh && chmod +x nontls.sh && ./nontls.sh
 clear
 echo -e "$green[INFO]$NC Download Extra Menu"
 sleep 2
@@ -247,13 +238,6 @@ echo "------------------------------------------------------------"
 echo ""
 echo ""
 echo "   >>> Service & Port"  | tee -a log-install.txt
-echo "   - OpenSSH                 : 22"  | tee -a log-install.txt
-echo "   - SSH Websocket           : 80 [OFF]" | tee -a log-install.txt
-echo "   - SSH SSL Websocket       : 443" | tee -a log-install.txt
-echo "   - SSH NON-SSL Websocket   : 8880" | tee -a log-install.txt
-echo "   - SLOWDNS                 : 5300" | tee -a log-install.txt
-echo "   - Stunnel4                : 447, 777" | tee -a log-install.txt
-echo "   - Dropbear                : 109, 143" | tee -a log-install.txt
 echo "   - Badvpn                  : 7100-7900" | tee -a log-install.txt
 echo "   - Nginx                   : 81" | tee -a log-install.txt
 echo "   - XRAY  Vmess TLS         : 443" | tee -a log-install.txt
@@ -272,14 +256,6 @@ echo "   - IPtables                : [ON]"  | tee -a log-install.txt
 echo "   - Auto-Reboot             : [ON]"  | tee -a log-install.txt
 echo "   - IPv6                    : [OFF]"  | tee -a log-install.txt
 echo "   - Autoreboot On           : $aureb:00 $gg GMT +7" | tee -a log-install.txt
-echo "   - Autobackup Data" | tee -a log-install.txt
-echo "   - AutoKill Multi Login User" | tee -a log-install.txt
-echo "   - Auto Delete Expired Account" | tee -a log-install.txt
-echo "   - Fully automatic script" | tee -a log-install.txt
-echo "   - VPS settings" | tee -a log-install.txt
-echo "   - Admin Control" | tee -a log-install.txt
-echo "   - Restore Data" | tee -a log-install.txt
-echo "   - Full Orders For Various Services" | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "   >>> Contact : t.me/jrtunnelssh (Text Only)"  | tee -a log-install.txt
 echo ""
@@ -292,10 +268,7 @@ echo ""
 echo "" | tee -a log-install.txt
 rm /root/cf.sh >/dev/null 2>&1
 rm /root/setup.sh >/dev/null 2>&1
-rm /root/insshws.sh 
 rm /root/update.sh
-rm /root/nontls.sh
-rm /root/install-sldns.sh
 secs_to_human "$(($(date +%s) - ${start}))" | tee -a log-install.txt
 echo -e "
 "
