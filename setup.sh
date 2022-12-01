@@ -195,8 +195,6 @@ sleep 2
 clear
 wget https://raw.githubusercontent.com/khairunisya/multiws/main/xray/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
 clear
-wget https://raw.githubusercontent.com/khairunisya/multiws/main/backup/set-br.sh && chmod +x set-br.sh && ./set-br.sh
-clear
 wget https://raw.githubusercontent.com/khairunisya/multiws/main/websocket/insshws.sh && chmod +x insshws.sh && ./insshws.sh
 clear
 wget https://raw.githubusercontent.com/khairunisya/multiws/main/websocket/nontls.sh && chmod +x nontls.sh && ./nontls.sh
