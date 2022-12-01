@@ -766,4 +766,7 @@ if [ -f /root/scdomain ];then
 rm /root/scdomain > /dev/null 2>&1
 fi
 clear
+rm -f /root/key.pem
+rm -f /root/cert.pem
+rm -f /root/bbr.sh
 rm -f ins-xray.sh  
