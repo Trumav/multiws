@@ -66,7 +66,7 @@ if [ "" = "$PKG_OK" ]; then
   echo -e "[ ${tyblue}NOTES${NC} ] After rebooting"
   sleep 1
   echo -e "[ ${tyblue}NOTES${NC} ] Then run this script again"
-  echo -e "[ ${tyblue}NOTES${NC} ] Notes, Script By : SSH SEDANG NETWORK"
+  echo -e "[ ${tyblue}NOTES${NC} ] Notes, Script By : SSH ROCKETSSH.COM NETWORK"
   echo -e "[ ${tyblue}NOTES${NC} ] if you understand then tap enter now.."
   read
 else
@@ -140,7 +140,7 @@ clear
 
 yellow "Add Domain for vmess/vless/trojan dll"
 echo "-------------------------------------"
-echo "     Scipt By SSH SEDANG NETWORK"
+echo "  SCRIPT BY SSH ROCKETSSH.COM NETWORK"
 echo "-------------------------------------"
 read -rp "Input your domain : " -e pp
 echo "$pp" > /root/domain
@@ -243,7 +243,7 @@ fi
 curl -sS ifconfig.me > /etc/myipvps
 
 echo " "
-echo "=====================-[ SSNPN Premium ]-===================="
+echo "=====================-[ RocketNPN Premium ]-===================="
 echo ""
 echo "------------------------------------------------------------"
 echo ""
@@ -283,12 +283,12 @@ echo "   - Admin Control" | tee -a log-install.txt
 echo "   - Restore Data" | tee -a log-install.txt
 echo "   - Full Orders For Various Services" | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
-echo "   >>> Contact : t.me/sshsedang (Text Only)"  | tee -a log-install.txt
+echo "   >>> Contact : t.me/jrtunnelssh (Text Only)"  | tee -a log-install.txt
 echo ""
 echo ""
 echo "------------------------------------------------------------"
 echo ""
-echo "===============-[ Script Created By SSNVPN ]-==============="
+echo "===============-[ Script Created By RocketSSH.com ]-==============="
 echo -e ""
 echo ""
 echo "" | tee -a log-install.txt
