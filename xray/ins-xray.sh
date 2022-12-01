@@ -387,6 +387,19 @@ EOF
 #nginx config
 cat >/etc/nginx/conf.d/xray.conf <<EOF
     server {
+	          listen 883;
+	          server_name tsel.me;
+	          location /worryfree
+	         {
+		        proxy_redirect off;
+	        	proxy_pass http://127.0.0.1:80;
+		        proxy_http_version 1.1;
+		        proxy_set_header X-Real-IP $remote_addr;
+		        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        	proxy_set_header Host $http_host;
+	       }    
+       }
+    server {
              listen 80;
              listen [::]:80;
              listen 443 ssl http2 reuseport;
